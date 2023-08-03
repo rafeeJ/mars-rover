@@ -19,9 +19,10 @@ describe("helpers", () => {
       expect(gridSize).toHaveProperty("x");
       expect(gridSize).toHaveProperty("y");
     });
-    test("should return an object if more whitespace than usual", () => {
-      const gridSize = parseGridSize("5  5");
-      expect(gridSize).toEqual({ x: 5, y: 5 });
+    test("should throw an error when input string is formatted incorrectly", () => {
+      expect(() => parseGridSize("5  5")).toThrow(
+        "Invalid grid size, please ensure you have entered two numbers separated by a space",
+      );
     });
   });
 
@@ -115,9 +116,11 @@ describe("helpers", () => {
       expect(roverPosition).toHaveProperty("y");
       expect(roverPosition).toHaveProperty("direction");
     });
+
     test("should return an object if more whitespace than usual", () => {
-      const roverPosition = parseRoverPosition("1  2 N");
-      expect(roverPosition).toEqual({ x: 1, y: 2, direction: 0 });
+      expect(() => parseRoverPosition("1  2 N")).toThrow(
+        "Invalid rover position, please ensure you have entered two numbers and a cardinal direction separated by a space",
+      );
     });
   });
 
