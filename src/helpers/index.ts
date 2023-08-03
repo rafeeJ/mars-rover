@@ -1,12 +1,18 @@
 import { Rover, RoverPosition } from "./types";
-const parseGridSize = (input: string) => {
+export const parseGridSize = (input: string) => {
   const gridSize = input.split(" ");
-  return {
-    x: parseInt(gridSize[0]),
-    y: parseInt(gridSize[1]),
-  };
+  const x = parseInt(gridSize[0]);
+  const y = parseInt(gridSize[1]);
+
+  if (isNaN(x) || isNaN(y)) {
+    throw new Error(
+      "Invalid grid size, please ensure you have entered two numbers separated by a space",
+    );
+  }
+
+  return { x, y };
 };
-const moveRover = (rover: Rover) => {
+export const moveRover = (rover: Rover) => {
   const { position } = rover;
   if (position.direction === 0) {
     position.y++;
@@ -19,7 +25,7 @@ const moveRover = (rover: Rover) => {
   }
 };
 
-const turnRover = (rover: Rover, direction: string) => {
+export const turnRover = (rover: Rover, direction: string) => {
   const { position } = rover;
   if (direction === "L") {
     rover.position.direction -= 1;
@@ -50,7 +56,7 @@ const runRover = (rover: Rover) => {
   );
 };
 
-const cardinalToNumber = (direction: string): number => {
+export const cardinalToNumber = (direction: string): number => {
   if (direction === "E") {
     return 1;
   } else if (direction === "S") {
@@ -60,7 +66,7 @@ const cardinalToNumber = (direction: string): number => {
   }
   return 0;
 };
-const numberToCardinal = (direction: number): string => {
+export const numberToCardinal = (direction: number): string => {
   if (direction === 1) {
     return "E";
   }
@@ -73,21 +79,33 @@ const numberToCardinal = (direction: number): string => {
   return "N";
 };
 
-const parseRoverPosition = (input: string): RoverPosition => {
+export const parseRoverPosition = (input: string): RoverPosition => {
   const position = input.split(" ");
 
-  return {
-    x: parseInt(position[0]),
-    y: parseInt(position[1]),
-    direction: cardinalToNumber(position[2]),
-  };
+  if (position.length !== 3) {
+    throw new Error(
+      "Invalid rover position, please ensure you have entered two numbers and a cardinal direction separated by a space",
+    );
+  }
+
+  const x = parseInt(position[0]);
+  const y = parseInt(position[1]);
+  const direction = cardinalToNumber(position[2]);
+
+  if (isNaN(x) || isNaN(y) || isNaN(direction)) {
+    throw new Error(
+      "Invalid rover position, please ensure you have entered two numbers and a cardinal direction separated by a space",
+    );
+  }
+
+  return { x, y, direction };
 };
 
 const parseRoverInstructions = (input: string) => {
   return input.split("");
 };
 
-const getRovers = (input: string[]) => {
+export const getRovers = (input: string[]) => {
   if (input.length % 2 !== 0) throw new Error("Invalid input");
 
   const rovers: Rover[] = [];
@@ -109,6 +127,7 @@ export const parseInputInstructions = (input: string) => {
 
   // execute the instructions
   for (let i = 0; i < rovers.length; i++) {
+    console.log("Running rover", i + 1);
     runRover(rovers[i]);
   }
 };
