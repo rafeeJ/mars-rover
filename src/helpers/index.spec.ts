@@ -1,6 +1,7 @@
 import { describe, expect, test } from "@jest/globals";
 import {
   cardinalToNumber,
+  checkIfCanMoveRover,
   getRovers,
   moveRover,
   numberToCardinal,
@@ -8,7 +9,13 @@ import {
   parseRoverPosition,
   turnRover,
 } from "./index";
-import { moveRoverArray, northRover } from "../tests/helpers";
+import {
+  eastRover,
+  moveRoverArray,
+  northRover,
+  southRover,
+  westRover,
+} from "../tests/helpers";
 import { Rover } from "./types";
 
 describe("helpers", () => {
@@ -138,6 +145,24 @@ describe("helpers", () => {
       expect(() => {
         getRovers(["1 2 N", "LMLMLMLMM", "3 3 E"]);
       }).toThrow("Invalid input");
+    });
+  });
+
+  describe("checkIfCanMoveRover", () => {
+    test("should return true if rover can move North", () => {
+      expect(checkIfCanMoveRover(northRover, { x: 5, y: 5 })).toBe(true);
+    });
+
+    test("should return false if rover cannot move South", () => {
+      expect(checkIfCanMoveRover(southRover, { x: 5, y: 5 })).toBe(false);
+    });
+
+    test("should return false if rover cannot West", () => {
+      expect(checkIfCanMoveRover(westRover, { x: 5, y: 5 })).toBe(false);
+    });
+
+    test("should return false if rover cannot East", () => {
+      expect(checkIfCanMoveRover(eastRover, { x: 0, y: 5 })).toBe(false);
     });
   });
 });

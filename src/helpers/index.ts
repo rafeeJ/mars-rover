@@ -41,16 +41,47 @@ export const turnRover = (rover: Rover, direction: string) => {
   }
 };
 
-const runRover = (rover: Rover) => {
+export const checkIfCanMoveRover = (
+  rover: Rover,
+  gridSize: { x: number; y: number },
+) => {
+  const { position } = rover;
+  if (position.direction === 0) {
+    if (position.y + 1 > gridSize.y) {
+      return false;
+    }
+  } else if (position.direction === 1) {
+    if (position.x + 1 > gridSize.x) {
+      return false;
+    }
+  } else if (position.direction === 2) {
+    if (position.y - 1 < 0) {
+      return false;
+    }
+  } else if (position.direction === 3) {
+    if (position.x - 1 < 0) {
+      return false;
+    }
+  }
+  return true;
+};
+const runRover = (rover: Rover, gridSize: { x: number; y: number }) => {
   const { position, instructions } = rover;
   for (let i = 0; i < instructions.length; i++) {
     const instruction = instructions[i];
     if (instruction === "M") {
+      // do we check if the rover would go off the grid here?
+      const safe = checkIfCanMoveRover(rover, gridSize);
+      if (!safe) {
+        console.log("Rover would go off the grid");
+        return;
+      }
       moveRover(rover);
     } else {
       turnRover(rover, instruction);
     }
   }
+
   console.log(
     `${position.x} ${position.y} ${numberToCardinal(position.direction)}`,
   );
@@ -128,6 +159,6 @@ export const parseInputInstructions = (input: string) => {
   // execute the instructions
   for (let i = 0; i < rovers.length; i++) {
     console.log("Running rover", i + 1);
-    runRover(rovers[i]);
+    runRover(rovers[i], gridSize);
   }
 };
